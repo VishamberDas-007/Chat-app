@@ -22,7 +22,10 @@ function sendMessage(msg) {
 	};
 
 	// append on the client side
-	appendMessage(message, "outgoing_message");
+	appendMessage(message, "outgoing-message");
+
+	// scrolling to bottom of outgoing message
+	scrollToBottom();
 
 	// emptying the textarea value
 	textArea.value = "";
@@ -33,20 +36,29 @@ function sendMessage(msg) {
 
 function appendMessage(msg, type) {
 	const div = document.createElement("div");
-
+	const span = document.createElement("span");
 	div.classList.add(type);
 
 	const messageContent = `
-    <h4>${msg.name}<h4>
+    <h4>${msg.name}</h4>
     <p>${msg.message}</p>
     `;
 
-	div.innerHTML = messageContent;
+	span.classList.add("span");
+	span.innerHTML = messageContent;
+	div.appendChild(span);
 	messageArea.appendChild(div);
 }
 
 // receive the message from server
 
 socket.on("message", (msg) => {
-	appendMessage(msg, "incoming_message");
+	appendMessage(msg, "incoming-message");
+
+	// scrolling to bottom after any incoming message
+	scrollToBottom();
 });
+
+function scrollToBottom() {
+	messageArea.scrollTop = messageArea.scrollHeight;
+}
